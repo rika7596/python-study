@@ -60,15 +60,15 @@ def softmax_with_cross_entropy(predictions, target_index):
     '''
     # TODO implement softmax with cross-entropy
     pred_copy = np.copy(predictions)
-    pred_copy -= np.max(pred_copy)
+    pred_copy -= (np.amax(pred_copy, axis=1)).reshape(predictions.shape[0],1)
     e = np.exp(pred_copy)
-    probs = e/np.sum(e)
-    loss = -(np.log(probs[target_index]))
+    probs = e/(np.sum(e, axis=1).reshape(predictions.shape[0],1))
+    loss = -np.average((np.log(probs[:,target_index])))
     dprediction = np.copy(probs)
-    dprediction[target_index] = -1 + dprediction[target_index]
+    dprediction[:,target_index] -= 1
     # Your final implementation shouldn't have any loops
     #raise Exception("Not implemented!")
-
+    #print(loss, '\n\n', dprediction)
     return loss, dprediction
 
 

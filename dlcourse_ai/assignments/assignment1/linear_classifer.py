@@ -59,13 +59,14 @@ def softmax_with_cross_entropy(predictions, target_index):
       dprediction, np array same shape as predictions - gradient of predictions by loss value
     '''
     # TODO implement softmax with cross-entropy
-    pred_copy = np.copy(predictions)
-    pred_copy -= (np.amax(pred_copy, axis=1)).reshape(predictions.shape[0],1)
+    pred_copy = np.copy(predictions).reshape(-1, predictions.shape[-1])
+    pred_copy -= np.amax(pred_copy, axis=1).reshape(-1,1)
     e = np.exp(pred_copy)
-    probs = e/(np.sum(e, axis=1).reshape(predictions.shape[0],1))
-    loss = -np.average((np.log(probs[:,target_index])))
+    probs = e/np.sum(e, axis=1).reshape(-1,1)
+    loss = -np.average(np.log(probs[:,target_index]))
     dprediction = np.copy(probs)
     dprediction[:,target_index] -= 1
+    dprediction.shape = predictions.shape
     # Your final implementation shouldn't have any loops
     #raise Exception("Not implemented!")
     #print(loss, '\n\n', dprediction)

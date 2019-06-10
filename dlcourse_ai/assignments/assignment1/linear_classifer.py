@@ -59,21 +59,61 @@ def softmax_with_cross_entropy(predictions, target_index):
       dprediction, np array same shape as predictions - gradient of predictions by loss value
     '''
     # TODO implement softmax with cross-entropy
-    pred_copy = np.copy(predictions).reshape(-1, predictions.shape[-1])
-    pred_copy -= np.amax(pred_copy, axis=1).reshape(-1,1)
-    e = np.exp(pred_copy)
-    probs = e/np.sum(e, axis=1).reshape(-1,1)
-    s = [i for i in range(pred_copy.shape[0])]
-    loss = -np.average(np.log(probs[s,target_index[0]]))
-    dprediction = np.copy(probs)
-    print(dprediction, '\n')
-    print(s, target_index, '\n')
-    dprediction[s,target_index[0]] -= 1
-    print(dprediction[s,target_index[0]], '\n\n')
-    #dprediction.shape = predictions.shape
     # Your final implementation shouldn't have any loops
-    #raise Exception("Not implemented!")
-    #print(loss, '\n\n', dprediction)
+    
+    # Make an array from target_index if it is not array
+    if not isinstance(target_index, np.ndarray):
+        target_index = np.array([[target_index]])
+    target_index.shape = (-1,)
+    
+    # Determine batch size and number of features
+    N = predictions.shape[-1]
+    batch_size = target_index.shape[0]
+    
+    #print("batch_size:", batch_size)
+    #print("N:", N)
+    
+    #print("pred:")
+    #print(predictions)
+    
+    #print("target:")
+    #print(target_index)
+    
+    # Prepare predictions and make them of proper shape
+    pred_copy = np.copy(predictions).reshape(batch_size, N)
+    pred_copy -= np.amax(pred_copy, axis=1).reshape(batch_size, 1)
+    
+    # Compute softmax
+    e = np.exp(pred_copy)
+    probs = e/np.sum(e, axis=1).reshape(batch_size, 1)
+    
+    #print("probs:")
+    #print(probs)
+
+    # Compute loss
+    s = np.arange(batch_size) # make array of [0, 1, 2, ..., (batch_size-1)]
+    target_probs = probs[s, target_index] # using multiple array indexing
+
+    #print("target_probs:")
+    #print(target_probs)
+    
+    loss = -np.average(np.log(target_probs))
+    
+    #print("loss:", loss)
+    
+    # Compute gradient
+    dprediction = np.copy(probs)
+    dprediction[s, target_index] -= 1
+    dprediction /= batch_size # normalize gradient
+    
+    #print("dprediction:")
+    #print(dprediction)
+    
+    # Make gradiens shape match the one of prediction
+    dprediction.shape = predictions.shape
+    
+    #raise Exception()
+    
     return loss, dprediction
 
 

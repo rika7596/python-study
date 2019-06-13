@@ -70,15 +70,6 @@ def softmax_with_cross_entropy(predictions, target_index):
     N = predictions.shape[-1]
     batch_size = target_index.shape[0]
     
-    #print("batch_size:", batch_size)
-    #print("N:", N)
-    
-    #print("pred:")
-    #print(predictions)
-    
-    #print("target:")
-    #print(target_index)
-    
     # Prepare predictions and make them of proper shape
     pred_copy = np.copy(predictions).reshape(batch_size, N)
     pred_copy -= np.amax(pred_copy, axis=1).reshape(batch_size, 1)
@@ -87,15 +78,9 @@ def softmax_with_cross_entropy(predictions, target_index):
     e = np.exp(pred_copy)
     probs = e/np.sum(e, axis=1).reshape(batch_size, 1)
     
-    #print("probs:")
-    #print(probs)
-
     # Compute loss
     s = np.arange(batch_size) # make array of [0, 1, 2, ..., (batch_size-1)]
     target_probs = probs[s, target_index] # using multiple array indexing
-
-    #print("target_probs:")
-    #print(target_probs)
     
     loss = -np.average(np.log(target_probs))
     
@@ -131,8 +116,11 @@ def l2_regularization(W, reg_strength):
     '''
 
     # TODO: implement l2 regularization and gradient
+    loss = reg_strength*np.sum(np.tensordot(W,W, axes=0))
+    
+    grad = 2*reg_strength*W
     # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+    #raise Exception("Not implemented!")
 
     return loss, grad
     
@@ -151,11 +139,28 @@ def linear_softmax(X, W, target_index):
       gradient, np.array same shape as W - gradient of weight by loss
 
     '''
+        
     predictions = np.dot(X, W)
-
+    
     # TODO implement prediction and gradient over W
+    #Determine batch size, number of features and number of classes
+    batch_size = X.shape[0]
+    N_f = X.shape[1]
+    N_c = W.shape[1]
+    
+    #print('predistions:', predictions.shape, '\n')
+    
+    #Compute loss and gradient
+    loss, grad = softmax_with_cross_entropy(predictions, target_index)
+    
+    #Compute loss and gradient of weight by loss
+    dW = np.sum(grad.reshape(batch_size, 1, N_c)*X.reshape(batch_size, N_f, 1), axis=0)
+    dW.shape = W.shape
+    
+    #print('dW:', dW, '\n\n')
+    
     # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+    #raise Exception("Not implemented!")
     
     return loss, dW
 

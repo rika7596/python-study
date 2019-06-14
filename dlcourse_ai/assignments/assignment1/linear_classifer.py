@@ -116,8 +116,7 @@ def l2_regularization(W, reg_strength):
     '''
 
     # TODO: implement l2 regularization and gradient
-    loss = reg_strength*np.sum(np.tensordot(W,W, axes=0))
-    
+    loss = reg_strength*np.tensordot(W,W)
     grad = 2*reg_strength*W
     # Your final implementation shouldn't have any loops
     #raise Exception("Not implemented!")

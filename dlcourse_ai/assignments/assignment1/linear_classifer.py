@@ -152,7 +152,7 @@ def linear_softmax(X, W, target_index):
     #Compute loss and gradient
     loss, grad = softmax_with_cross_entropy(predictions, target_index)
     
-    #Compute loss and gradient of weight by loss
+    #Compute gradient of weight by loss
     dW = np.sum(grad.reshape(batch_size, 1, N_c)*X.reshape(batch_size, N_f, 1), axis=0)
     dW.shape = W.shape
     
@@ -194,13 +194,28 @@ class LinearSoftmaxClassifier():
             np.random.shuffle(shuffled_indices)
             sections = np.arange(batch_size, num_train, batch_size)
             batches_indices = np.array_split(shuffled_indices, sections)
-
-            # TODO implement generating batches from indices
+            
+            # TODO implement generating batches from indicesъ
+            for batch in batches_indices:
+                #print('shuffled_indices:', shuffled_indices, '\n')
+                batch_s = len(batch)
+                X_batch = np.take(X, batch, axis=0)
+                y_batch = np.take(y, batch, axis=0)
+                #print('X_batch:', X_batch.shape, '\n')
+                
+                #Compute loss and gradient of weight by loss
+                W_loss, dW = linear_softmax(X_batch, self.W, y_batch)
+                
+                #Compute L2 regularization loss on weights and its gradient
+                l2_loss, grad = l2_regularization(self.W, reg)
+                
+                loss = W_loss + l2_loss
+                self.W -= (dW + grad)*learning_rate
             # Compute loss and gradients
             # Apply gradient to weights using learning rate
             # Don't forget to add both cross-entropy loss
             # and regularization!
-            raise Exception("Not implemented!")
+            #raise Exception("Not implemented!")
 
             # end
             print("Epoch %i, loss: %f" % (epoch, loss))
@@ -218,10 +233,12 @@ class LinearSoftmaxClassifier():
           y_pred, np.array of int (test_samples)
         '''
         y_pred = np.zeros(X.shape[0], dtype=np.int)
-
+        
         # TODO Implement class prediction
+        
+        y_pred = np.argsort(np.dot(X,self.W), axis=1)[:,0]
         # Your final implementation shouldn't have any loops
-        raise Exception("Not implemented!")
+        #raise Exception("Not implemented!")
 
         return y_pred
 

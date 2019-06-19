@@ -196,6 +196,7 @@ class LinearSoftmaxClassifier():
             batches_indices = np.array_split(shuffled_indices, sections)
             
             # TODO implement generating batches from indicesъ
+            loss = 0
             for batch in batches_indices:
                 #print('shuffled_indices:', shuffled_indices, '\n')
                 batch_s = len(batch)
@@ -209,8 +210,13 @@ class LinearSoftmaxClassifier():
                 #Compute L2 regularization loss on weights and its gradient
                 l2_loss, grad = l2_regularization(self.W, reg)
                 
-                loss = W_loss + l2_loss
+                loss += W_loss + l2_loss
                 self.W -= (dW + grad)*learning_rate
+            loss /= len(batches_indices)
+            loss_history.append(loss)
+            #pred = self.predict(v_x)
+            #accuracy = multiclass_accuracy(pred, v_y)
+            
             # Compute loss and gradients
             # Apply gradient to weights using learning rate
             # Don't forget to add both cross-entropy loss

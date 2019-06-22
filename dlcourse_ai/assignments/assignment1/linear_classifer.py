@@ -242,7 +242,7 @@ class LinearSoftmaxClassifier():
         
         # TODO Implement class prediction
         
-        y_pred = np.argsort(np.dot(X,self.W), axis=1)[:,0]
+        y_pred = np.argmax(np.dot(X,self.W), axis=1)
         # Your final implementation shouldn't have any loops
         #raise Exception("Not implemented!")
 

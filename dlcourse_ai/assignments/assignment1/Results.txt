@@ -1,3 +1,4 @@
+Неправильный prediction:
 Accuracy after training for 200 epochs:  learning_rate: 0.1 reg_strengths 0 -- 0.051
 Accuracy after training for 200 epochs:  learning_rate: 0.1 reg_strengths 0.0001 -- 0.053
 Accuracy after training for 200 epochs:  learning_rate: 0.1 reg_strengths 1e-05 -- 0.048
@@ -8,3 +9,10 @@ Accuracy after training for 300 epochs:  learning_rate: 0.01 reg_strengths 0 -- 
 Accuracy after training for 300 epochs:  learning_rate: 0.001 reg_strengths 0 -- 0.049
 Accuracy after training for 500 epochs:  learning_rate: 0.1 reg_strengths 0, batch_size 300-- 0.057
 Accuracy after training for 500 epochs:  learning_rate: 0.1 reg_strengths 0, batch_size 100 -- 0.067
+Правильный:
+batch_size - 100:
+Accuracy after training for 100 epochs:  learning_rate: 1e-05 reg_strengths 0 -- 0.12
+Accuracy after training for 100 epochs:  learning_rate: 0.0001 reg_strengths 0 -- 0.19
+Accuracy after training for 100 epochs:  learning_rate: 0.001 reg_strengths 0 -- 0.225
+Accuracy after training for 100 epochs:  learning_rate: 0.01 reg_strengths 0 -- 0.236
+Accuracy after training for 100 epochs:  learning_rate: 0.1 reg_strengths 0 -- 0.236
